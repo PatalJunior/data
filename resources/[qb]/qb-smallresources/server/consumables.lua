@@ -7,6 +7,32 @@ for k,_ in pairs(Config.ConsumablesAlcohol) do
     end)
 end
 
+local function IsFacingWater()
+    local ped = PlayerPedId()
+    local headPos = GetPedBoneCoords(ped, 31086, 0.0, 0.0, 0.0)
+    local offsetPos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 3.5, -1.7)
+    local hit, hitPos = TestProbeAgainstWater(headPos.x, headPos.y, headPos.z, offsetPos.x, offsetPos.y, offsetPos.z)
+    return hit
+end
+
+----------- / Fill Empty Bottle Logic
+
+QBCore.Functions.CreateUseableItem("empty_water_bottle", function(source, item)
+    local Player = QBCore.Functions.GetPlayer(source)
+    if IsFacingWater() then
+        if Player.Functions.RemoveItem(item.name, 1, item.slot) then
+            Player.Functions.Additem("water_bottle", 1, item.slot)
+        else
+            TriggerEvent("qb-log:server:CreateLog", "anticheat", "Anti-Cheat", "red", GetPlayerName(source) .. " tried to fill a empty bottle, but didn't have one", false)
+        end
+    else
+        TriggerClientEvent('QBCore:Notify', source,  "You are not facing water", "error")
+    end
+
+    if not Player.Functions.RemoveItem(item.name, 1, item.slot) then return end
+    TriggerClientEvent("consumables:client:Eat", source, item.name)
+end)
+
 ----------- / Eat
 
 for k,_ in pairs(Config.ConsumablesEat) do
