@@ -12,6 +12,19 @@ end
 for k,_ in pairs(Config.ConsumablesEat) do
     QBCore.Functions.CreateUseableItem(k, function(source, item)
         local Player = QBCore.Functions.GetPlayer(source)
+        if Config.IsMetadataConsumable[item.name] then
+            if not (Player.PlayerData.items[item.slot].info.consumable_ammount <= Config.MetadataConsumables[item.name]) then
+               Player.PlayerData.items[item.slot].info.consumable_ammount =Player.PlayerData.items[item.slot].info.consumable_ammount - Config.MetadataConsumables[item.name]
+                Player.Functions.SetPlayerData("items", Player.PlayerData.items)
+                TriggerClientEvent("consumables:client:Eat", source, item.name)
+                return
+            else
+                Player.Functions.RemoveItem(item.name, 1, item.slot)
+                TriggerClientEvent("consumables:client:Eat", source, item.name)
+                return
+            end   
+        end
+
         if not Player.Functions.RemoveItem(item.name, 1, item.slot) then return end
         TriggerClientEvent("consumables:client:Eat", source, item.name)
     end)
@@ -21,6 +34,21 @@ end
 for k,_ in pairs(Config.ConsumablesDrink) do
     QBCore.Functions.CreateUseableItem(k, function(source, item)
         local Player = QBCore.Functions.GetPlayer(source)
+        print(Player.PlayerData.items[item.slot].info.consumable_ammount)
+        print(Config.MetadataConsumables[item.name])
+        if Config.MetadataConsumables[item.name] then
+            if not (Player.PlayerData.items[item.slot].info.consumable_ammount <= Config.MetadataConsumables[item.name]) then
+               Player.PlayerData.items[item.slot].info.consumable_ammount =Player.PlayerData.items[item.slot].info.consumable_ammount - Config.MetadataConsumables[item.name]
+                Player.Functions.SetPlayerData("items", Player.PlayerData.items)
+                TriggerClientEvent("consumables:client:Drink", source, item.name)
+                return
+            else
+                Player.Functions.RemoveItem(item.name, 1, item.slot)
+                TriggerClientEvent("consumables:client:Drink", source, item.name)
+                return
+            end   
+        end
+
         if not Player.Functions.RemoveItem(item.name, 1, item.slot) then return end
         TriggerClientEvent("consumables:client:Drink", source, item.name)
     end)
@@ -38,6 +66,18 @@ end
 local function CreateItem(name,type)
     QBCore.Functions.CreateUseableItem(name, function(source, item)
         local Player = QBCore.Functions.GetPlayer(source)
+        if Config.IsMetadataConsumable[item.name] then
+            if not (Player.PlayerData.items[item.slot].info.consumable_ammount <= Config.MetadataConsumables[item.name]) then
+               Player.PlayerData.items[item.slot].info.consumable_ammount =Player.PlayerData.items[item.slot].info.consumable_ammount - Config.MetadataConsumables[item.name]
+                Player.Functions.SetPlayerData("items", Player.PlayerData.items)
+                TriggerClientEvent("consumables:client:"..type, source, item.name)
+                return
+            else
+                Player.Functions.RemoveItem(item.name, 1, item.slot)
+                TriggerClientEvent("consumables:client:"..type, source, item.name)
+                return
+            end   
+        end
         if not Player.Functions.RemoveItem(item.name, 1, item.slot) then return end
         TriggerClientEvent("consumables:client:"..type, source, item.name)
     end)

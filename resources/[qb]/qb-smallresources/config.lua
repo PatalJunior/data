@@ -103,6 +103,14 @@ Config.ConsumablesEat = {
     ["snikkel_candy"] = math.random(40, 50),
 }
 
+Config.IsMetadataConsumable = {}
+
+-- How much it removes per usage (100 is not used)
+Config.MetadataConsumables = {
+    ["water_bottle"] = 20,
+    ["coffee"] = 20
+}
+
 Config.ConsumablesDrink = {
     ["water_bottle"] = math.random(35, 54),
     ["kurkakola"] = math.random(35, 54),

@@ -569,6 +569,12 @@ function FormatItemInfo(itemData) {
         } else if (itemData.name == "labkey") {
             $(".item-info-title").html("<p>" + itemData.label + "</p>");
             $(".item-info-description").html("<p>Lab: " + itemData.info.lab + "</p>");
+        } else if (itemData.name == "water_bottle") {
+            $(".item-info-title").html("<p>" + itemData.label + "</p>");
+            $(".item-info-description").html("<p>Water ammount: " + itemData.info.consumable_ammount + "</p>");
+        } else if (itemData.name == "coffee") {
+            $(".item-info-title").html("<p>" + itemData.label + "</p>");
+            $(".item-info-description").html("<p>Coffee ammount: " + itemData.info.consumable_ammount + "</p>");
         } else {
             $(".item-info-title").html("<p>" + itemData.label + "</p>");
             $(".item-info-description").html("<p>" + itemData.description + "</p>");
