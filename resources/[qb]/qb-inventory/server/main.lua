@@ -2456,6 +2456,11 @@ CreateUsableItem("driver_license", function(source, item)
 	end
 end)
 
+
+CreateUsableItem("map", function(source, item)
+	TriggerClientEvent("qb-inventory:client:openMap", source)
+end)
+
 CreateUsableItem("id_card", function(source, item)
 	local playerPed = GetPlayerPed(source)
 	local playerCoords = GetEntityCoords(playerPed)

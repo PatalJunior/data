@@ -385,6 +385,11 @@ RegisterNetEvent("qb-inventory:client:closeinv", function()
     closeInventory()
 end)
 
+
+RegisterNetEvent("qb-inventory:client:openMap", function()
+    ActivateFrontendMenu('FE_MENU_VERSION_MP_PAUSE',0,-1)
+end)
+
 RegisterNetEvent('inventory:client:CheckOpenState', function(type, id, label)
     local name = QBCore.Shared.SplitStr(label, "-")[2]
     if type == "stash" then

@@ -7,30 +7,35 @@ for k,_ in pairs(Config.ConsumablesAlcohol) do
     end)
 end
 
-local function IsFacingWater()
-    local ped = PlayerPedId()
-    local headPos = GetPedBoneCoords(ped, 31086, 0.0, 0.0, 0.0)
-    local offsetPos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 3.5, -1.7)
-    local hit, hitPos = TestProbeAgainstWater(headPos.x, headPos.y, headPos.z, offsetPos.x, offsetPos.y, offsetPos.z)
-    return hit
-end
+local isFacingWater = {}
+
+RegisterNetEvent('qb-smallresources:server:isFacingWater', function(facingWater)
+    local src = source
+    isFacingWater[src] = facingWater
+end)
+
 
 ----------- / Fill Empty Bottle Logic
 
 QBCore.Functions.CreateUseableItem("empty_water_bottle", function(source, item)
     local Player = QBCore.Functions.GetPlayer(source)
-    if IsFacingWater() then
+    TriggerClientEvent('qb-smallresources:client:isFacingWater', source)
+    repeat Wait(5) until isFacingWater[source] ~= nil
+    if isFacingWater[source] then
+        isFacingWater[source] = nil
         if Player.Functions.RemoveItem(item.name, 1, item.slot) then
-            Player.Functions.Additem("water_bottle", 1, item.slot)
+            TriggerClientEvent('QBCore:Notify', source,  "You filled the water bottle", "success")
+            Wait(200)
+            local info = {}
+            info.consumable_ammount = 100
+            Player.Functions.AddItem("water_bottle", 1, item.slot, info)
+            TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items["water_bottle"], "add")
         else
             TriggerEvent("qb-log:server:CreateLog", "anticheat", "Anti-Cheat", "red", GetPlayerName(source) .. " tried to fill a empty bottle, but didn't have one", false)
         end
     else
         TriggerClientEvent('QBCore:Notify', source,  "You are not facing water", "error")
     end
-
-    if not Player.Functions.RemoveItem(item.name, 1, item.slot) then return end
-    TriggerClientEvent("consumables:client:Eat", source, item.name)
 end)
 
 ----------- / Eat

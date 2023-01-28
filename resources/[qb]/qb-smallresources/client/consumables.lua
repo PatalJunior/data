@@ -12,6 +12,21 @@ RegisterNetEvent('QBCore:Client:UpdateObject', function()
     QBCore = exports['qb-core']:GetCoreObject()
 end)
 
+local function IsFacingWater()
+    local ped = PlayerPedId()
+    local headPos = GetPedBoneCoords(ped, 31086, 0.0, 0.0, 0.0)
+    local offsetPos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 3.5, -1.7)
+    local hit, hitPos = TestProbeAgainstWater(headPos.x, headPos.y, headPos.z, offsetPos.x, offsetPos.y, offsetPos.z)
+    return hit
+end
+
+
+RegisterNetEvent('qb-smallresources:client:isFacingWater', function()
+    isFacing = IsFacingWater()
+    repeat Wait(5) until isFacing ~= nil
+    TriggerServerEvent('qb-smallresources:server:isFacingWater', isFacing)
+end)
+
 local function loadAnimDict(dict)
     if HasAnimDictLoaded(dict) then return end
     RequestAnimDict(dict)
